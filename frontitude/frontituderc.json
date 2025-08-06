@@ -1,0 +1,10 @@
+{
+	"library": false,
+	"projects": [
+		{
+			"name": "Calculator",
+			"id": "71fa7b32-438a-4d0c-bbf6-4a6c4883e216"
+		}
+	],
+	"filePath": "./src/main/res/values/strings.xml"
+}

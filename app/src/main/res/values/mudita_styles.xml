@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mudita styles-->
+    <style name="MuditaBasicTextStyle">
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="MuditaHeadline500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:lineHeight">40sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaHeadline900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:lineHeight">40sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- titleLarge -->
+    <style name="MuditaTitleLarge500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">31sp</item>
+        <item name="android:lineHeight">31sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaTitleLarge900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">31sp</item>
+        <item name="android:lineHeight">31sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- titleMedium -->
+    <style name="MuditaTitleMedium500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaTitleMedium900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- titleSmall -->
+    <style name="MuditaTitleSmall500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineHeight">25sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaTitleSmall900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineHeight">25sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- labelLarge -->
+    <style name="MuditaLabelLarge500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineHeight">23sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaLabelLarge900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineHeight">23sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- labelMedium -->
+    <style name="MuditaLabelMedium500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineHeight">23sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaLabelMedium900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineHeight">23sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- labelSmall -->
+    <style name="MuditaLabelSmall500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">18sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaLabelSmall900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">18sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- label x-Small -->
+    <style name="MuditaLabelXSmall500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineHeight">15sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaLabelXSmall900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineHeight">15sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <style name="MuditaLabelSmallAllCaps900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">18sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- bodyLarge -->
+    <style name="MuditaBodyLarge500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaBodyLarge900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- bodyMedium -->
+    <style name="MuditaBodyMedium500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineHeight">25sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaBodyMedium900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineHeight">25sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+
+    <!-- bodySmall -->
+    <style name="MuditaBodySmall500" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_medium</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">22sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="MuditaBodySmall900" parent="MuditaBasicTextStyle">
+        <item name="android:fontFamily">lato_black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">22sp</item>
+        <item name="android:textFontWeight">900</item>
+    </style>
+</resources>

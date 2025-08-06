@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name" translatable="false">OpenCalc</string>
+    <string name="app_name_display">Calculator</string>
+
+    <string name="select_theme_title">Select Theme</string>
+
+    <string name="zero" translatable="false">0</string>
+    <string name="one" translatable="false">1</string>
+    <string name="two" translatable="false">2</string>
+    <string name="three" translatable="false">3</string>
+    <string name="four" translatable="false">4</string>
+    <string name="five" translatable="false">5</string>
+    <string name="six" translatable="false">6</string>
+    <string name="seven" translatable="false">7</string>
+    <string name="eight" translatable="false">8</string>
+    <string name="nine" translatable="false">9</string>
+
+    <string name="clear" translatable="false">AC</string>
+    <string name="parentheses" translatable="false">(  )</string>
+    <string name="add" translatable="false">+</string>
+    <string name="substract" translatable="false">−</string>
+    <string name="point" translatable="false">.</string>
+    <string name="equals" translatable="false">=</string>
+    <string name="devide" translatable="false">÷</string>
+    <string name="multiply" translatable="false">×</string>
+    <string name="exponent" translatable="false">^</string>
+    <string name="backspace" translatable="false"> </string>
+
+    <string name="devideBy100" translatable="false">%</string>
+    <string name="degree" translatable="false">DEG</string>
+    <string name="sinus" translatable="false">sin</string>
+    <string name="sinusInv" translatable="false">sin⁻¹</string>
+    <string name="cosinus" translatable="false">cos</string>
+    <string name="cosinusInv" translatable="false">cos⁻¹</string>
+
+    <string name="tangent" translatable="false">tan</string>
+    <string name="tangentInv" translatable="false">tan⁻¹</string>
+    <string name="inv" translatable="false">INV</string>
+    <string name="e" translatable="false">e</string>
+    <string name="naturalLogarithm" translatable="false">ln</string>
+    <string name="naturalLogarithmInv" translatable="false">e^</string>
+
+    <string name="logarithm" translatable="false">log</string>
+    <string name="logarithmInv" translatable="false">10^</string>
+    <string name="pi" translatable="false">π</string>
+    <string name="factorial" translatable="false">!</string>
+    <string name="square" translatable="false">√</string>
+    <string name="squareInv" translatable="false">x²</string>
+
+    <string name="infinity">Infinity</string>
+
+    <!-- App Menu -->
+    <string name="app_menu_theme">Theme</string>
+    <string name="app_menu_vibration">Vibration</string>
+    <string name="app_menu_clear_history">Clear History</string>
+    <string name="app_menu_github" translatable="false">GitHub</string>
+    <string name="app_menu_about">About</string>
+
+    <!-- Theme choices -->
+    <string name="theme_system">System</string>
+    <string name="theme_amoled">Amoled</string>
+    <string name="theme_material_you">Material You</string>
+
+    <string name="theme_follow_system">Match System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <!-- Others -->
+    <string name="value_copied">Copied</string>
+    <string name="value_too_large">Value too large</string>
+    <string name="require_real_number">Real number required</string>
+</resources>

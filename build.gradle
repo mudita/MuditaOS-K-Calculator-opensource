@@ -1,0 +1,74 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext {
+        gradle_version = '8.1.1'
+        kotlin_version = '1.8.10'
+        sentry_plugins_version = '0.0.43'
+        licensee_version = '1.12.0'
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url uri(project.ext.muditaRepoUrl)
+            credentials {
+                username = project.ext.muditaUsername
+                password = project.ext.muditaPassword
+            }
+        }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.mudita:sentry-plugins:$sentry_plugins_version"
+        classpath "app.cash.licensee:licensee-gradle-plugin:$licensee_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+
+        def localProperties = localProperties(rootDir)
+
+        def muditaRepoUsername = localProperties.getProperty(
+                "mudita_repo_username",
+                System.getenv("ARTIFACTORY_USERNAME")
+        )
+        def muditaRepoPassword = localProperties.getProperty(
+                "mudita_repo_password",
+                System.getenv("ARTIFACTORY_PASSWORD")
+        )
+
+        def muditaRepoUrl = localProperties.getProperty("mudita_nexus_repo_url")
+
+        maven {
+            url uri(muditaRepoUrl)
+            credentials {
+                username = muditaRepoUsername?.toString()
+                password = muditaRepoPassword?.toString()
+            }
+        }
+    }
+}
+
+static def localProperties(rootDir) {
+    def localPropertiesFile = new File(rootDir, "local.properties")
+    def localProperties = new Properties()
+
+    if (localPropertiesFile.exists()) {
+        localProperties.load(new FileInputStream(localPropertiesFile))
+    }
+
+    return localProperties
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}
