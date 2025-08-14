@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:localeConfig="@xml/locales_config"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_calculator_icon"
+        android:label="@string/common_label_calculator"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.App.Starting"
+        android:name="com.mudita.calc.OpenCalcApp">
+
+        <meta-data
+            android:name="settings_icon"
+            android:resource="@drawable/ic_calculator_icon" />
+
+        <activity
+            android:name="com.mudita.calc.AboutActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.mudita.calc.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

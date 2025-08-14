@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="calculator_error_h1_error">Fout</string>
+  <string name="calculator_error_h1_formaterror">Formaatfout</string>
+  <string name="common_button_copy">Kopiëren</string>
+  <string name="common_label_calculator">Rekenmachine</string>
+</resources>

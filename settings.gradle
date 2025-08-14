@@ -1,0 +1,24 @@
+gradle.beforeProject { project ->
+    def localPropertiesFile = new File(rootDir, "local.properties")
+    def localProperties = new Properties()
+
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.withInputStream { stream ->
+            localProperties.load(stream)
+        }
+    }
+
+    def muditaUsername = localProperties.getProperty("mudita_repo_username") ?: System.getenv("ARTIFACTORY_USERNAME")
+    def muditaPassword = localProperties.getProperty("mudita_repo_password") ?: System.getenv("ARTIFACTORY_PASSWORD")
+    def muditaRepoUrl = localProperties.getProperty("mudita_nexus_repo_url")
+
+    if (muditaUsername && muditaPassword && muditaRepoUrl) {
+        project.ext.muditaUsername = muditaUsername
+        project.ext.muditaPassword = muditaPassword
+        project.ext.muditaRepoUrl = muditaRepoUrl
+    }
+}
+
+include ':app'
+rootProject.name = "Open Calculator"
+include ':frontitude'
