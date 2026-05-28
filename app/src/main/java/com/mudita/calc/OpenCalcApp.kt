@@ -21,7 +21,7 @@ class OpenCalcApp : Application() {
             dsn = SENTRY_DSN,
             proguardUuid = PROGUARD_UUID,
             environment = BUILD_TYPE,
-            isDebug = DEBUG,
+            isEnabled = !DEBUG,
         )
 
         // if the theme is overriding the system, the first creation doesn't work properly

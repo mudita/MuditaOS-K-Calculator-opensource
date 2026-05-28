@@ -25,6 +25,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.mudita.calc.utils.displayBuildInfoOnTap
 import com.mudita.opencalculator.R
 import com.mudita.opencalculator.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        displayBuildInfoOnTap()
 
         // Themes
         val themes = Themes(this)
@@ -87,28 +90,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.input.setOnLongClickListener {
-            if (binding.input.text.isNotBlank()) {
-                binding.input.background =
-                    ContextCompat.getColor(applicationContext, android.R.color.transparent)
-                        .toDrawable()
-                copyTextButton(binding.input)
-            }
-            true
-        }
+        binding.input.attachLongClickCopyPopup()
 
         // Handle changes into input to update resultDisplay
         binding.input.doOnTextChanged { _, _, _, _ -> updateResultDisplay() }
 
-        binding.resultDisplay.setOnLongClickListener {
-            if (binding.resultDisplay.text.isNotBlank()) {
-                binding.resultDisplay.background =
-                    ContextCompat.getColor(applicationContext, android.R.color.transparent)
-                        .toDrawable()
-                copyTextButton(binding.resultDisplay)
-            }
-            true
-        }
+        binding.resultDisplay.attachLongClickCopyPopup()
 
         binding.input.customSelectionActionModeCallback = object : ActionMode.Callback {
             override fun onCreateActionMode(mode: ActionMode?, menu: Menu?) = false
@@ -142,6 +129,13 @@ class MainActivity : AppCompatActivity() {
         val inputCharArray = binding.input.text.toString().toCharArray()
         val valueNoSeparators = value.replace(groupingSeparatorSymbol, "")
         val isValueInt = valueNoSeparators.toIntOrNull() != null
+
+        // Prevent inserting a digit right after %
+        val previousChar = inputCharArray.lastOrNull()
+        val valueIsDigit = value.toCharArray().lastOrNull()?.isDigit() ?: false
+        if (previousChar == '%' && (valueIsDigit || value == ".")) {
+            return
+        }
 
         if (
             inputCharArray.isNotEmpty() &&
@@ -453,9 +447,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun keyDigitPadMappingToDisplay(view: View) {
-        val leftCharacterIndex = binding.input.selectionStart - 1
-        val leftCharacter = binding.input.text.toString().getOrNull(leftCharacterIndex)
-        if (leftCharacter == '%') return
         updateDisplay(view, (view as Button).text as String)
     }
 
@@ -476,7 +467,7 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            if (currentSymbol != previousChar // Ignore multiple presses of the same button
+            if ((currentSymbol != previousChar || currentSymbol == "%") // Ignore multiple presses of the same button, except '%' button
                 && currentSymbol != nextChar
                 && previousChar != decimalSeparatorSymbol // Ensure that the previous character is not a comma
                 && (previousChar != "(" // Ensure that we are not at the beginning of a parenthesis
@@ -759,6 +750,16 @@ class MainActivity : AppCompatActivity() {
 
         // Disable the keyboard on display EditText
         binding.input.showSoftInputOnFocus = false
+    }
+
+    fun EditText.attachLongClickCopyPopup() {
+        setOnLongClickListener {
+            background = ContextCompat.getColor(applicationContext, android.R.color.transparent).toDrawable()
+            copyTextButton(this)
+            true
+        }
+        isLongClickable = !text.isNotEmpty()
+        doOnTextChanged { text, _, _, _ -> isLongClickable = !text.isNullOrBlank() }
     }
 
     private val Int.dp: Int

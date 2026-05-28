@@ -1,36 +1,35 @@
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 import com.mudita.sentry.plugins.tasks.SentryReleaseTask
 import com.mudita.sentry.plugins.tasks.model.AppMetadata
 import com.mudita.sentry.plugins.util.generateSentryUuid
 import tasks.DeployTask
 import tasks.GenerateChangelogTask
-import tasks.Versions
+import tasks.GetLocalProperties.Companion.localProperties
 import tasks.Versions.APP_ID
 import tasks.Versions.COMPILE_SDK
 import tasks.Versions.MIN_SDK
 import tasks.Versions.TARGET_SDK
-import tasks.Versions.VERSION_CODE
 import tasks.Versions.VERSION_NAME
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.mudita.sentry.plugins.release")
-    id("app.cash.licensee")
+    id("com.mikepenz.aboutlibraries.plugin")
 }
 
 android {
     namespace = "com.mudita.opencalculator"
     compileSdk = COMPILE_SDK
 
-    val sentryDsn = localProperties(rootDir).getProperty("sentry_dsn", "")
+    val sentryDsn = System.getenv("SENTRY_DSN") ?: localProperties(rootDir).getProperty("sentry_dsn", "")
 
     defaultConfig {
         applicationId = APP_ID
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = VERSION_CODE
+        versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 1
         versionName = VERSION_NAME
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -75,6 +74,22 @@ android {
         }
     }
 
+    applicationVariants.all {
+        preBuildProvider.configure {
+            dependsOn("exportLibraryDefinitions")
+        }
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val appName = APP_ID.split(".").last()
+            val appVersion = VERSION_NAME
+            val buildType = buildType.name
+            val versionCode = versionCode
+
+            val newApkName = "$appName-$appVersion($versionCode)-$buildType.apk"
+            outputImpl.outputFileName = newApkName
+        }
+    }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -85,12 +100,19 @@ android {
     }
 }
 
-licensee {
-    allow("Apache-2.0")
-    allow("MIT")
-    ignoreDependencies("com.mudita") {
-        because("Internal dependency")
+aboutLibraries {
+    val ghToken = System.getenv("GITHUB_TOKEN").orEmpty()
+    if (ghToken.isNotBlank()) {
+        fetchRemoteLicense = true
+        gitHubApiToken = ghToken
     }
+
+    exclusionPatterns = listOf(
+        Regex("com\\.mudita.*").toPattern()
+    )
+
+    duplicationMode = DuplicateMode.MERGE
+    duplicationRule = DuplicateRule.SIMPLE
 }
 
 dependencies {
@@ -107,7 +129,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10")
 
     //Sentry
-    implementation("com.mudita:sentry-sdk:0.0.61")
+    implementation("com.mudita:sentry-sdk:0.0.62")
+
+    //About Libraries
+    implementation("com.mudita.kompakt:about-libraries:1.0.3")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
@@ -115,36 +140,25 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.1")
 }
 
-fun localProperties(rootDir: File): Properties {
-    val localPropertiesFile = File(rootDir, "local.properties")
-    val localProperties = Properties()
-
-    if (localPropertiesFile.exists()) {
-        localProperties.load(FileInputStream(localPropertiesFile))
-    }
-
-    return localProperties
-}
-
 tasks.register("uploadApkToNexus", DeployTask::class) {
     versionName = VERSION_NAME
-    tagPrefix = project.property("tagPrefix") as String? ?: "development"
+    tagPrefix = project.findProperty("tagPrefix") as String? ?: "development"
     appName = APP_ID.split(".").last()
 
-    nexusUrl = project.property("nexusUrl") as String? ?: ""
-    nexusUsername = project.property("nexusUsername") as String? ?: ""
-    nexusPassword = project.property("nexusPassword") as String? ?: ""
+    nexusUrl = project.findProperty("nexusUrl") as String? ?: ""
+    nexusUsername = project.findProperty("nexusUsername") as String? ?: ""
+    nexusPassword = project.findProperty("nexusPassword") as String? ?: ""
 }
 
 tasks.register("generateChangelog", GenerateChangelogTask::class) {
-    appName = Versions.APP_ID.split(".").last()
+    appName = APP_ID.split(".").last()
     versionName = VERSION_NAME
     tagPrefix = project.findProperty("tagPrefix") as String? ?: "development"
 }
 
 tasks.register("checkVersion") {
     doFirst {
-        val currentVersion = Versions.VERSION_NAME
+        val currentVersion = VERSION_NAME
 
         // Extracting the tag from the GITHUB_REF environment variable
         val githubRef = System.getenv("GITHUB_REF") ?: throw GradleException("GITHUB_REF not found.")

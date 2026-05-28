@@ -12,6 +12,11 @@
 *.apk
 *.ap_
 *.aab
+*.aar
+
+# Build artifacts
+**/output-metadata.json
+*.dm
 
 # Files for the ART/Dalvik VM
 *.dex
@@ -97,3 +102,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Build artifacts
+aboutlibraries.json

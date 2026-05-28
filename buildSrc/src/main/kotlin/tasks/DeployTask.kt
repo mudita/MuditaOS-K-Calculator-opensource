@@ -3,8 +3,13 @@ package tasks
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import org.gradle.process.ExecOperations
+import java.util.Locale
+import javax.inject.Inject
 
-open class DeployTask : DefaultTask() {
+abstract class DeployTask @Inject constructor(
+    private val execOperations: ExecOperations
+) : DefaultTask() {
     @Input
     var versionName: String = ""
 
@@ -22,7 +27,7 @@ open class DeployTask : DefaultTask() {
 
     @Input
     var tagPrefix: String = ""
-        get() = field.toLowerCase()
+        get() = field.lowercase(Locale.getDefault())
 
     private val buildType
         get() = if (tagPrefix == "development") {
@@ -33,48 +38,46 @@ open class DeployTask : DefaultTask() {
 
     @TaskAction
     fun upload() {
-        val apkPath = project.layout.projectDirectory.file("build/outputs/apk/$buildType/$appName-$versionName-$buildType.apk")
-        val changelogPath = project.layout.projectDirectory.file("build/outputs/apk/$buildType/CHANGELOG-$appName-$versionName-$tagPrefix.md")
-        val apkFile = apkPath.asFile
-        val changelogFile = changelogPath.asFile
+        val apkDir = project.layout.projectDirectory.dir("build/outputs/apk/$buildType").asFile
 
-        when {
-            !apkFile.exists() -> {
-                throw RuntimeException("APK file does not exist: ${apkFile.absolutePath}")
-            }
+        val apkFile = apkDir
+            .listFiles { file -> file.extension == "apk" }
+            ?.maxByOrNull { it.lastModified() }
+            ?: throw RuntimeException("APK file does not exist in: ${apkDir.absolutePath}")
 
-            !changelogFile.exists() -> {
-                throw RuntimeException("Changelog file does not exist: ${changelogFile.absolutePath}")
-            }
+        val changelogFile = apkDir
+            .listFiles { file -> file.extension == "md" && file.name.startsWith("CHANGELOG") }
+            ?.maxByOrNull { it.lastModified() }
 
-            nexusUrl.isBlank() || nexusUsername.isBlank() || nexusPassword.isBlank() -> {
-                throw RuntimeException("Nexus credentials are not set")
-            }
+        if (nexusUrl.isBlank() || nexusUsername.isBlank() || nexusPassword.isBlank()) {
+            throw RuntimeException("Nexus credentials are not set")
+        }
 
-            else -> {
-                val targetUrl = "$nexusUrl/kompakt-$appName/$tagPrefix/$versionName"
-                project.exec {
-                    commandLine(
-                        "curl",
-                        "-v",
-                        "-u",
-                        "$nexusUsername:$nexusPassword",
-                        "--upload-file",
-                        apkFile.absolutePath,
-                        "$targetUrl/${apkFile.name}"
-                    )
-                }
-                project.exec {
-                    commandLine(
-                        "curl",
-                        "-v",
-                        "-u",
-                        "$nexusUsername:$nexusPassword",
-                        "--upload-file",
-                        changelogFile.absolutePath,
-                        "$targetUrl/${changelogFile.name}"
-                    )
-                }
+        val targetUrl = "$nexusUrl/kompakt-$appName/$tagPrefix/$versionName"
+
+        execOperations.exec {
+            commandLine(
+                "curl",
+                "-v",
+                "-u",
+                "$nexusUsername:$nexusPassword",
+                "--upload-file",
+                apkFile.absolutePath,
+                "$targetUrl/${apkFile.name}"
+            )
+        }
+
+        if (changelogFile != null) {
+            execOperations.exec {
+                commandLine(
+                    "curl",
+                    "-v",
+                    "-u",
+                    "$nexusUsername:$nexusPassword",
+                    "--upload-file",
+                    changelogFile.absolutePath,
+                    "$targetUrl/${changelogFile.name}"
+                )
             }
         }
     }

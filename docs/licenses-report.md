@@ -1,5 +1,10 @@
-# Licenses report
+# Licenses
+Licenses list is collected by the [AboutLibraries](https://github.com/mikepenz/AboutLibraries) plugin.
 
-To generate licenses report run `./gradlew app:licenseeAndroidRelease`.
-Report will be available in file [artifacts.json](../app/build/reports/licensee/androidRelease/artifacts.json).
-Licenses list is collected by `app.cash.licensee` plugin. 
+The report is generated **automatically** during every build process and saved to:
+`app/src/main/res/raw/aboutlibraries.json`
+
+To generate it manually, run:
+```bash
+./gradlew exportLibraryDefinitions
+```

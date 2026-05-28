@@ -1,0 +1,61 @@
+name: Deployment - QA Version
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'release/**'
+      - 'feature/**'
+      - 'tech/**'
+
+jobs:
+  deploy:
+    name: Deploy - QA App Version
+    runs-on: [ Linux ]
+    env:
+      ARTIFACTORY_URL: ${{secrets.ARTIFACTORY_URL}}
+      ARTIFACTORY_USERNAME: ${{secrets.ARTIFACTORY_USERNAME}}
+      ARTIFACTORY_PASSWORD: ${{secrets.ARTIFACTORY_PASSWORD}}
+      MUDITA_PRIVATE_REPOSITORY_URL: ${{secrets.MUDITA_PRIVATE_REPOSITORY_URL}}
+      SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      SENTRY_URL: ${{secrets.SENTRY_URL}}
+      SENTRY_ORG: ${{secrets.SENTRY_ORG}}
+      SENTRY_PROJECT: ${{secrets.SENTRY_PROJECT}}
+      SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Increment BUILD_NUMBER as VERSION_CODE
+        id: version_code
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          VERSION_CODE=$(python3 buildSrc/src/main/kotlin/scripts/bump_build_version.py BUILD_NUMBER)
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "version-code=$VERSION_CODE" >> $GITHUB_OUTPUT
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Assemble Qa apk
+        timeout-minutes: 20
+        run: ./gradlew assembleQa
+
+      - name: Deploy to Nexus
+        run: ./gradlew uploadApkToNexus -PnexusUsername=${ARTIFACTORY_USERNAME} -PnexusPassword=${ARTIFACTORY_PASSWORD} -PnexusUrl=${ARTIFACTORY_URL} -PtagPrefix=qa
+
